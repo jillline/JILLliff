@@ -48,29 +48,38 @@
     }
 
     async function shareMsg() {
-      await liff.ShareTargetPicker([
+      await liff.shareTargetPicker([
         {
         "type":"text",
-          "text":"ตัวอย่าง"
+        "text":"ตัวอย่าง"
         }
       ])
     }
 
     function logOut() {
+      liff.logout()
+      window.location.reload()
     }
 
     function closed() {
+      liff.closeWindow()
     }
 
     async function scanCode() {
+      const result = await liff.scanCode()
+      document.getElementById("scanCode").append(result.value)
     }
 
     function openWindow() {
+      liff.openWindow({
+        url: "https://line.me",
+        external: true
+      })
     }
 
     async function getFriendship() {
       const friend = await liff.getFriendship()
-      document.getElementById("friendship").append (friend.friendFlag)
+      document.getElementById("friendship").append(friend.friendFlag)
       if(!friend.friendFlag){
         if(confirm("ยังไม่เป็นเพื่อน กันนะ")){
           window.location="https://line.me/R/ti/p/@178yfyoa"
@@ -80,16 +89,20 @@
 
     async function sendMsg() {
       if (liff.getContext().type !=="none") {
-        await liff.sendMessages ([
+        await liff.sendMessages([
           {
-            "type" : "sticker",
-            "stickerId" : 1,
-            "packageId" : 1
+            "type":"sticker",
+            "stickerId": 1,
+            "packageId": 1
+          },
+          {
+            "type":"sticker",
+            "stickerId": 2,
+            "packageId": 2
           }
           ])
-        aleart ("Message sent")
+        alert("Message sent")
       }
-        
     }
 
     function getContext() {
@@ -98,7 +111,6 @@
       document.getElementById("utouId").append(liff.getContext().utouId)
       document.getElementById("roomId").append(liff.getContext().roomId)
       document.getElementById("groupId").append(liff.getContext().groupId)
-      
     }
 
     async function getUserProfile() {
@@ -129,13 +141,12 @@
     async function main() {
       await liff.init({ liffId: "1655706043-j6ma03nK" })
       document.getElementById("isLoggedIn").append(liff.isLoggedIn())
-      if.(liff.isLoggedIn()){
+      if(liff.isLoggedIn()) {
       getEnvironment()
       getUserProfile()
       getContext()
       getFriendship()
-      }
-      else{
+      }else{
         liff.login()
       }
     }
